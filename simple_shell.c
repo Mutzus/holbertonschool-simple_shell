@@ -4,14 +4,14 @@
 #include <sys/wait.h>
 #include <string.h>
 
-#define PROMPT "#cisfun$ "
+#define PROMPT "$ "
 
 int main(void)
 {
     char *line = NULL;
     size_t bufsize = 0;
     ssize_t characters;
-    char *args[] = {NULL};
+    char *args[1024];
     int status;
 
     while (1)
@@ -26,16 +26,51 @@ int main(void)
         if (characters > 1) // If not just newline
         {
             line[strcspn(line, "\n")] = '\0'; // Remove newline
-            // Parse and execute command
-            if (fork() == 0)
+
+            // Parse command and arguments
+            char *token = strtok(line, " ");
+            int i = 0;
+            while (token != NULL)
             {
-                execve(args[0], args, NULL);
-                perror("Error");
-                exit(EXIT_FAILURE);
+                args[i++] = token;
+                token = strtok(NULL, " ");
+            }
+            args[i] = NULL;
+
+            // Check for built-in commands
+            if (strcmp(args[0], "exit") == 0)
+            {
+                break;
+            }
+            else if (strcmp(args[0], "env") == 0)
+            {
+                char **env = __environ;
+                while (*env != NULL)
+                {
+                    printf("%s\n", *env);
+                    env++;
+                }
             }
             else
             {
-                wait(&status);
+                // Execute command
+                if (access(args[0], X_OK) == 0)
+                {
+                    if (fork() == 0)
+                    {
+                        execve(args[0], args, NULL);
+                        perror("Error");
+                        exit(EXIT_FAILURE);
+                    }
+                    else
+                    {
+                        wait(&status);
+                    }
+                }
+                else
+                {
+                    fprintf(stderr, "%s: command not found\n", args[0]);
+                }
             }
         }
     }
