@@ -1,0 +1,29 @@
+SIMPLE_SHELL(1)                General Commands Manual               SIMPLE_SHELL(1)
+
+NAME
+       simple_shell - simple Unix shell implementation
+
+SYNOPSIS
+       simple_shell
+
+DESCRIPTION
+       simple_shell is a basic Unix shell implementation developed as part of the Holberton School curriculum. It provides basic shell functionality including command execution, built-in commands, and input/output redirection.
+
+OPTIONS
+       None.
+
+AUTHORS
+       Written by Eduardo Mutzus
+
+REPORTING BUGS
+       Report any bugs to the GitHub repository: https://github.com/Mutzus/holbertonschool-simple_shell
+
+SEE ALSO
+       /bin/sh(1)
+
+COPYRIGHT
+       This is free and unencumbered software released into the public domain.
+
+VERSION
+       1.0
+
